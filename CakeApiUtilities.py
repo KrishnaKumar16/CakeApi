@@ -11,7 +11,7 @@ urllib3.disable_warnings(InsecureRequestWarning)
 
 class CreateApiCollection:
 
-    def __init__(self, baseUrl: str = None,
+    def __init__(self, collectionName: str, baseUrl: str = None,
                  proxyHost: str = None,
                  proxyPort: str = None,
                  proxyUsername: str = None,
@@ -23,6 +23,7 @@ class CreateApiCollection:
                  authPassword: str = None,
                  disableInsecureRequestWarning: bool = False):
 
+        self.collectionName = collectionName
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.DEBUG)
 
@@ -31,7 +32,7 @@ class CreateApiCollection:
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
-
+        self.logger.info("Executing collection - {}".format(collectionName))
         self.logger.info("Base URL is {}".format(baseUrl))
         if disableInsecureRequestWarning is True:
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -82,7 +83,7 @@ class CreateApiCollection:
         """
         return TestCase()
 
-    def hitTheGetRequest(self, url: str, params = None, headers = None, cookies = None,
+    def hitTheGetRequest(self, endPoint: str, params = None, headers = None, cookies = None,
                          auth = None, timeout = None, allow_redirects = True,
                          hooks = None, stream = None, cert = None):
         """Constructs a :method:`GET Request <Request>`, prepares it and sends it.
@@ -113,7 +114,7 @@ class CreateApiCollection:
                             :param cert: (optional) if String, path to ssl client cert file (.pem).
                                 If Tuple, ('cert', 'key') pair.
                             """
-        self.__currentResponse = self.__session.get(url = self.__baseUrl + url,
+        self.__currentResponse = self.__session.get(url = self.__baseUrl + endPoint,
                                                     headers = headers,
                                                     params = params or {},
                                                     auth = auth,
@@ -123,7 +124,7 @@ class CreateApiCollection:
                                                     allow_redirects = allow_redirects,
                                                     stream = stream, cert = cert)
         self.logger.info(
-            "GET request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + url,
+            "GET request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + endPoint,
                                                                                           headers = headers,
                                                                                           params = params or {},
                                                                                           auth = auth,
@@ -136,7 +137,7 @@ class CreateApiCollection:
                                                                                           cert = cert)))
         return self
 
-    def hitThePostRequest(self, url: str, params = None, data = None, json = None, headers = None, cookies = None,
+    def hitThePostRequest(self, endPoint: str, params = None, data = None, json = None, headers = None, cookies = None,
                           auth = None, timeout = None, allow_redirects = True,
                           hooks = None, stream = None, cert = None):
         """Constructs a :method:`POST Request <Request>`, prepares it and sends it.
@@ -171,7 +172,7 @@ class CreateApiCollection:
                             :param cert: (optional) if String, path to ssl client cert file (.pem).
                                 If Tuple, ('cert', 'key') pair.
                             """
-        self.__currentResponse = self.__session.post(url = self.__baseUrl + url,
+        self.__currentResponse = self.__session.post(url = self.__baseUrl + endPoint,
                                                      data = data,
                                                      json = json,
                                                      headers = headers,
@@ -183,7 +184,7 @@ class CreateApiCollection:
                                                      allow_redirects = allow_redirects,
                                                      stream = stream, cert = cert)
         self.logger.info(
-            "POST request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + url,
+            "POST request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + endPoint,
                                                                                            data = data,
                                                                                            json = json,
                                                                                            headers = headers,
@@ -198,7 +199,7 @@ class CreateApiCollection:
                                                                                            cert = cert)))
         return self
 
-    def hitThePutRequest(self, url: str, params = None, data = None, json = None, headers = None, cookies = None,
+    def hitThePutRequest(self, endPoint: str, params = None, data = None, json = None, headers = None, cookies = None,
                          auth = None, timeout = None, allow_redirects = True,
                          hooks = None, stream = None, cert = None):
         """Constructs a :method:`PUT Request <Request>`, prepares it and sends it.
@@ -233,7 +234,7 @@ class CreateApiCollection:
                             :param cert: (optional) if String, path to ssl client cert file (.pem).
                                 If Tuple, ('cert', 'key') pair.
                             """
-        self.__currentResponse = self.__session.put(url = self.__baseUrl + url,
+        self.__currentResponse = self.__session.put(url = self.__baseUrl + endPoint,
                                                     data = data,
                                                     json = json,
                                                     headers = headers,
@@ -245,7 +246,7 @@ class CreateApiCollection:
                                                     allow_redirects = allow_redirects,
                                                     stream = stream, cert = cert)
         self.logger.info(
-            "PUT request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + url,
+            "PUT request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + endPoint,
                                                                                           data = data,
                                                                                           json = json,
                                                                                           headers = headers,
@@ -260,7 +261,7 @@ class CreateApiCollection:
                                                                                           cert = cert)))
         return self
 
-    def hitThePatchRequest(self, url: str, params = None, data = None, json = None, headers = None, cookies = None,
+    def hitThePatchRequest(self, endPoint: str, params = None, data = None, json = None, headers = None, cookies = None,
                            auth = None, timeout = None, allow_redirects = True,
                            hooks = None, stream = None, cert = None):
         """Constructs a :method:`PATCH Request <Request>`, prepares it and sends it.
@@ -295,7 +296,7 @@ class CreateApiCollection:
                             :param cert: (optional) if String, path to ssl client cert file (.pem).
                                 If Tuple, ('cert', 'key') pair.
                             """
-        self.__currentResponse = self.__session.patch(url = self.__baseUrl + url,
+        self.__currentResponse = self.__session.patch(url = self.__baseUrl + endPoint,
                                                       data = data,
                                                       json = json,
                                                       headers = headers,
@@ -307,7 +308,7 @@ class CreateApiCollection:
                                                       allow_redirects = allow_redirects,
                                                       stream = stream, cert = cert)
         self.logger.info(
-            "PATCH request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + url,
+            "PATCH request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + endPoint,
                                                                                             data = data,
                                                                                             json = json,
                                                                                             headers = headers,
@@ -322,7 +323,7 @@ class CreateApiCollection:
                                                                                             cert = cert)))
         return self
 
-    def hitTheDeleteRequest(self, url: str, params = None, data = None, json = None, headers = None, cookies = None,
+    def hitTheDeleteRequest(self, endPoint: str, params = None, data = None, json = None, headers = None, cookies = None,
                             auth = None, timeout = None, allow_redirects = True,
                             hooks = None, stream = None, cert = None):
         """Constructs a :method:`DELETE Request <Request>`, prepares it and sends it.
@@ -357,7 +358,7 @@ class CreateApiCollection:
                             :param cert: (optional) if String, path to ssl client cert file (.pem).
                                 If Tuple, ('cert', 'key') pair.
                             """
-        self.__currentResponse = self.__session.delete(url = self.__baseUrl + url,
+        self.__currentResponse = self.__session.delete(url = self.__baseUrl + endPoint,
                                                        data = data,
                                                        json = json,
                                                        headers = headers,
@@ -369,7 +370,7 @@ class CreateApiCollection:
                                                        allow_redirects = allow_redirects,
                                                        stream = stream, cert = cert)
         self.logger.info(
-            "DELETE request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + url,
+            "DELETE request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + endPoint,
                                                                                              data = data,
                                                                                              json = json,
                                                                                              headers = headers,
@@ -384,7 +385,7 @@ class CreateApiCollection:
                                                                                              cert = cert)))
         return self
 
-    def hitTheOptionsRequest(self, url: str, params = None, data = None, json = None, headers = None, cookies = None,
+    def hitTheOptionsRequest(self, endPoint: str, params = None, data = None, json = None, headers = None, cookies = None,
                              auth = None, timeout = None, allow_redirects = True,
                              hooks = None, stream = None, cert = None):
         """Constructs a :method:`OPTIONS Request <Request>`, prepares it and sends it.
@@ -419,7 +420,7 @@ class CreateApiCollection:
                             :param cert: (optional) if String, path to ssl client cert file (.pem).
                                 If Tuple, ('cert', 'key') pair.
                             """
-        self.__currentResponse = self.__session.options(url = self.__baseUrl + url,
+        self.__currentResponse = self.__session.options(url = self.__baseUrl + endPoint,
                                                         data = data,
                                                         json = json,
                                                         headers = headers,
@@ -431,7 +432,7 @@ class CreateApiCollection:
                                                         allow_redirects = allow_redirects,
                                                         stream = stream, cert = cert)
         self.logger.info(
-            "OPTIONS request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + url,
+            "OPTIONS request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + endPoint,
                                                                                               data = data,
                                                                                               json = json,
                                                                                               headers = headers,
@@ -446,7 +447,7 @@ class CreateApiCollection:
                                                                                               cert = cert)))
         return self
 
-    def hitTheHeadRequest(self, url: str, params = None, data = None, json = None, headers = None, cookies = None,
+    def hitTheHeadRequest(self, endPoint: str, params = None, data = None, json = None, headers = None, cookies = None,
                           auth = None, timeout = None, allow_redirects = True,
                           hooks = None, stream = None, cert = None):
         """Constructs a :method:`HEAD Request <Request>`, prepares it and sends it.
@@ -481,7 +482,7 @@ class CreateApiCollection:
                             :param cert: (optional) if String, path to ssl client cert file (.pem).
                                 If Tuple, ('cert', 'key') pair.
                             """
-        self.__currentResponse = self.__session.head(url = self.__baseUrl + url,
+        self.__currentResponse = self.__session.head(url = self.__baseUrl + endPoint,
                                                      data = data,
                                                      json = json,
                                                      headers = headers,
@@ -493,7 +494,7 @@ class CreateApiCollection:
                                                      allow_redirects = allow_redirects,
                                                      stream = stream, cert = cert)
         self.logger.info(
-            "HEAD request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + url,
+            "HEAD request has been executed using the following attributes {}".format(dict(url = self.__baseUrl + endPoint,
                                                                                            data = data,
                                                                                            json = json,
                                                                                            headers = headers,
@@ -523,7 +524,7 @@ class CreateApiCollection:
         :param variableValue: Variable value to be set
         """
         self.__collectionVariables[variableName] = variableValue
-        self.logger.info("Collection variable has been set {} = {}".format(variableName, variableValue))
+        self.logger.info("Collection variable has been set, {} = {}".format(variableName, variableValue))
 
     def SetValueFromResponseToTheCollectionVariale(self, variableName: str, responseDictPath: str):
         """
@@ -534,7 +535,7 @@ class CreateApiCollection:
         variableValue = self.__getDictValue(self.__currentResponse.json(),
                                             self.__cleanDictPath(responseDictPath))
         self.__collectionVariables[variableName] = variableValue
-        self.logger.info("Collection variable has been set {} = {}".format(variableName, variableValue))
+        self.logger.info("Collection variable has been set, {} = {}".format(variableName, variableValue))
         return self
 
     def getResponse(self):
